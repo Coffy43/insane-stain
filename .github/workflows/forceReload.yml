@@ -36,11 +36,11 @@ jobs:
     - id: set_domain
       name: Set Domain
       run: |
-        echo "::set-output name=dom::'https://www-stg.jetblue.com/'"
+        echo "::set-env name=dom::https://www-stg.jetblue.com/"
        
     - name: Check outputs
       shell: pwsh
-      run: echo ${{ steps.set_domain.outputs.dom }}
+      run: echo ${{ env.dom }}
     
     - name: Refresh Home Page Files
       if: ${{ github.event.inputs.homeHeaderFooter != 'none' }} 
