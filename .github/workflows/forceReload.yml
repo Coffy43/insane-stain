@@ -38,6 +38,8 @@ jobs:
       run: |
         if  [ ${{ github.event.inputs.syncEnv }} = "stg" ];  then
           echo "::set-output name=dom::https://www-stg.jetblue.com/"
+        elif [ ${{ github.event.inputs.syncEnv }} = "dev2" ];  then
+          echo "::set-output name=dom::https://www-dev2.jetblue.com/"
         fi
        
     - name: Check outputs
