@@ -11,7 +11,6 @@ on:
          - stg
          - qa2
          - dev2
-         - sandbox
       homeHeaderFooter:
         type: choice
         description: 'Refresh header, footer, or home page'
@@ -40,6 +39,10 @@ jobs:
           echo "::set-output name=dom::https://www-stg.jetblue.com/"
         elif [ ${{ github.event.inputs.syncEnv }} = "dev2" ];  then
           echo "::set-output name=dom::https://www-dev2.jetblue.com/"
+        elif [ ${{ github.event.inputs.syncEnv }} = "qa2" ];  then
+          echo "::set-output name=dom::https://www-qa2.jetblue.com/"
+        elif [ ${{ github.event.inputs.syncEnv }} = "prod" ];  then
+          echo "::set-output name=dom::https://www.jetblue.com/"
         fi
        
     - name: Check outputs
