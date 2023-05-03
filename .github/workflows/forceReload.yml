@@ -33,7 +33,8 @@ jobs:
 
     steps:
     
-    - name: set_domain
+    - id: set_domain
+      name: Set Domain
       run: |
        if ${{ github.event.inputs.syncEnv }} == 'stg'; then
         echo "::set-output name=dom::https://www-stg.jetblue.com/"
