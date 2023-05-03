@@ -36,15 +36,11 @@ jobs:
     - id: set_domain
       name: Set Domain
       run: |
-       if ${{ github.event.inputs.syncEnv }} == 'stg'; then
-        echo "::set-output name=dom::https://www-stg.jetblue.com/"
-       elif ${{ github.event.inputs.syncEnv }} == 'dev2'; then
-         echo "::set-output name=dom::https://www-dev2.jetblue.com/"
-       fi
+        echo "::set-output name=dom::'https://www-stg.jetblue.com/'"
        
     - name: Check outputs
       shell: pwsh
-      run: echo "${{ steps.set_domain.outputs.dom }}"
+      run: echo ${{ steps.set_domain.outputs.dom }}
     
     - name: Refresh Home Page Files
       if: ${{ github.event.inputs.homeHeaderFooter != 'none' }} 
