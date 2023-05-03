@@ -25,7 +25,8 @@ on:
         description: 'Path to the page after .com (e.g. bag info page would be "at-the-airport/baggage-information") note: if doing home page/header/footer this can be left blank'
         required: false 
         type: string
-      
+env:
+  dom: https://www-dev2.jetblue.com/
 
 jobs:
   curl:
@@ -36,15 +37,13 @@ jobs:
     - name: set_domain
       run: |
        if ${{ github.event.inputs.syncEnv }} == 'stg'; then
-        echo "::set-output dom=https://www-stg.jetblue.com/::true"
-       elif ${{ github.event.inputs.syncEnv }} == 'dev2'; then
-        echo "::set-output dom=https://www-dev2.jetblue.com/::true"
+        echo ::set-env name=dom::https://www-stg.jetblue.com/
        fi
     
     - name: Refresh Home Page Files
       if: ${{ github.event.inputs.homeHeaderFooter != 'none' }} 
-      run: curl ${{ steps.set_domain.outputs.dom }}i18n-next/.rest/jetblue/v4/page/home/A?personalizations="countryCode=US&currentLang=en"&translateLanguage=en&reload=true
+      run: curl ${{ env.dom }}i18n-next/.rest/jetblue/v4/page/home/A?personalizations="countryCode=US&currentLang=en"&translateLanguage=en&reload=true
       
     - name: Refresh ${{ github.event.inputs.path }}
       if: ${{ github.event.inputs.path != null }} 
-      run: curl ${{ steps.set_domain.outputs.dom }}i18n-next/.rest/jetblue/v4/page/home/${{ github.event.inputs.path }}?personalizations="countryCode=US&currentLang=en"&translateLanguage=en&reload=true
+      run: curl ${{ env.dom }}i18n-next/.rest/jetblue/v4/page/home/${{ github.event.inputs.path }}?personalizations="countryCode=US&currentLang=en"&translateLanguage=en&reload=true
