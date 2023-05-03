@@ -40,6 +40,10 @@ jobs:
        elif ${{ github.event.inputs.syncEnv }} == 'dev2'; then
          echo "::set-output name=dom::https://www-dev2.jetblue.com/"
        fi
+       
+    - name: Check outputs
+      shell: pwsh
+      run: echo ${{ steps.set_domain.outputs.dom }}
     
     - name: Refresh Home Page Files
       if: ${{ github.event.inputs.homeHeaderFooter != 'none' }} 
