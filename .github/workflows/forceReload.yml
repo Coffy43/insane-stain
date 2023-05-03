@@ -1,0 +1,50 @@
+name: Curl API Endpoint
+
+on:
+  workflow_dispatch:
+    inputs:
+      syncEnv:
+        type: choice
+        description: 'Environment To Sync'
+        options:
+         - prod
+         - stg
+         - qa2
+         - dev2
+         - sandbox
+      homeHeaderFooter:
+        type: choice
+        description: 'Refresh header, footer, or home page'
+        required: false
+        options:
+         - none
+         - header
+         - footer
+         - home
+      path:
+        description: 'Path to the page after .com (e.g. bag info page would be "at-the-airport/baggage-information") note: if doing home page/header/footer this can be left blank'
+        required: false 
+        type: string
+      
+
+jobs:
+  curl:
+    runs-on: ubuntu-latest
+
+    steps:
+    
+    - name: set_domain
+      run: |
+       if ${{ github.event.inputs.syncEnv }} == 'stg'; then
+        echo "::set-output dom=https://www-stg.jetblue.com/::true"
+       elif ${{ github.event.inputs.syncEnv }} == 'dev2'; then
+        echo "::set-output dom=https://www-dev2.jetblue.com/::true"
+       fi
+    
+    - name: Refresh Home Page Files
+      if: ${{ github.event.inputs.homeHeaderFooter != 'none' }} 
+      run: curl ${{ steps.set_domain.outputs.dom }}i18n-next/.rest/jetblue/v4/page/home/A?personalizations="countryCode=US&currentLang=en"&translateLanguage=en&reload=true
+      
+    - name: Refresh ${{ github.event.inputs.path }}
+      if: ${{ github.event.inputs.path != null }} 
+      run: curl ${{ steps.set_domain.outputs.dom }}i18n-next/.rest/jetblue/v4/page/home/${{ github.event.inputs.path }}?personalizations="countryCode=US&currentLang=en"&translateLanguage=en&reload=true
